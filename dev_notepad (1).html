@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dev&gt;NotePad — Unlimited Dual Workspace &amp; 100+ Picsart Font Hub by Dev.MosabbiR</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Curated Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Dancing+Script:wght@600;700&amp;family=Fira+Code:wght@400;600&amp;family=Hind+Siliguri:wght@400;600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Noto+Sans+Bengali:wght@400;600;700&amp;family=Noto+Serif+Bengali:wght@400;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;family=Poppins:wght@400;500;600;700&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            choco: {
+              50: '#FDFBF7',
+              100: '#FAF4ED',
+              200: '#F1E3D3',
+              300: '#DFC2A7',
+              400: '#BD9676',
+              500: '#8D5B4C',
+              600: '#6F4132',
+              700: '#543023',
+              800: '#3E2419',
+              900: '#2C1810',
+              950: '#1A0E0A',
+            },
+            gold: {
+              300: '#F7E7A9',
+              400: '#EED676',
+              500: '#D4AF37',
+              600: '#B59020',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            bengali: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #FAF4ED; }
+    ::-webkit-scrollbar-thumb { background: #BD9676; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #8D5B4C; }
+
+    .chocolate-gradient {
+      background: linear-gradient(135deg, #1A0E0A 0%, #2C1810 40%, #543023 100%);
+    }
+
+    .editor-sheet {
+      min-height: 520px;
+      outline: none;
+      word-break: break-word;
+      line-height: 1.8;
+    }
+    .editor-sheet:empty:before {
+      content: attr(data-placeholder);
+      color: #9CA3AF;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Checklist & elements */
+    .todo-item { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    .todo-checkbox { width: 17px; height: 17px; accent-color: #8D5B4C; cursor: pointer; }
+    .editor-sheet table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    .editor-sheet td, .editor-sheet th { border: 1px solid #DFC2A7; padding: 8px 12px; }
+    .editor-sheet pre { background: #2C1810; color: #FAF4ED; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; margin: 8px 0; overflow-x: auto; }
+    .editor-sheet blockquote { border-left: 4px solid #8D5B4C; padding: 6px 14px; color: #543023; font-style: italic; margin: 8px 0; background: #FAF4ED; border-radius: 0 8px 8px 0; }
+    
+    /* Image inside editor with active outline */
+    .editor-sheet img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+    .editor-sheet img.selected-img {
+      outline: 3px solid #D4AF37;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.45);
+    }
+    .img-align-left { display: block; margin-right: auto; margin-left: 0; }
+    .img-align-center { display: block; margin-left: auto; margin-right: auto; }
+    .img-align-right { display: block; margin-left: auto; margin-right: 0; }
+
+    /* Drag over dropzone */
+    .drag-over {
+      outline: 2px dashed #D4AF37 !important;
+      background-color: rgba(241, 227, 211, 0.5) !important;
+    }
+
+    /* Grid Background Options */
+    .grid-lines {
+      background-image: linear-gradient(#e6d5c3 1px, transparent 1px);
+      background-size: 100% 28px;
+    }
+    .grid-dots {
+      background-image: radial-gradient(#BD9676 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .grid-boxes {
+      background-image: linear-gradient(to right, #eedccb 1px, transparent 1px),
+                        linear-gradient(to bottom, #eedccb 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    @media print {
+      header, nav, #topToolbar, #actionMenu, #findReplaceBar, #fancyModal, #imageToolbar, #infoModal, #passwordModal, #exportModal, #historyModal, footer, .no-print {
+        display: none !important;
+      }
+      body { background: #fff !important; color: #000 !important; }
+      .editor-sheet { border: none !important; min-height: auto !important; }
+    }
+  </style>
+</head>
+<body class="bg-choco-50 text-gray-800 antialiased min-h-screen flex flex-col font-sans select-none">
+
+  <!-- Interactive Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 bg-choco-950 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-gold-500 pointer-events-none -translate-y-24 opacity-0">
+    <i class="fa-solid fa-check text-gold-400 text-lg" id="toastIcon"></i>
+    <span id="toastMsg" class="font-medium text-sm">Action completed successfully!</span>
+  </div>
+
+  <!-- Auto-Expire Countdown Banner -->
+  <div id="expireBanner" class="bg-amber-600 text-white text-xs font-semibold py-1.5 px-4 text-center hidden items-center justify-center gap-2">
+    <i class="fa-regular fa-clock animate-pulse"></i>
+    <span>Auto-Expire Active: Workspace wipes in <b id="expireTimeLeft">--:--</b></span>
+    <button onclick="cancelAutoExpire()" class="underline ml-2 hover:text-amber-200">Cancel</button>
+  </div>
+
+  <!-- Floating Image Inspector Toolbar -->
+  <div id="imageToolbar" class="fixed z-50 bg-choco-950 text-white px-3 py-2 rounded-2xl shadow-2xl border border-gold-500 items-center gap-2 text-xs hidden">
+    <span class="text-gold-400 font-bold flex items-center gap-1"><i class="fa-regular fa-image"></i> Image:</span>
+    <button onclick="resizeSelectedImg('25%')" class="px-2 py-1 rounded bg-choco-800 hover:bg-choco-700">25%</button>
+    <button onclick="resizeSelectedImg('50%')" class="px-2 py-1 rounded bg-choco-800 hover:bg-choco-700">50%</button>
+    <button onclick="resizeSelectedImg('75%')" class="px-2 py-1 rounded bg-choco-800 hover:bg-choco-700">75%</button>
+    <button onclick="resizeSelectedImg('100%')" class="px-2 py-1 rounded bg-choco-800 hover:bg-choco-700">100%</button>
+    <div class="h-4 w-px bg-choco-700 mx-1"></div>
+    <button onclick="alignSelectedImg('left')" class="p-1 hover:text-gold-400" title="Align Left"><i class="fa-solid fa-align-left"></i></button>
+    <button onclick="alignSelectedImg('center')" class="p-1 hover:text-gold-400" title="Align Center"><i class="fa-solid fa-align-center"></i></button>
+    <button onclick="alignSelectedImg('right')" class="p-1 hover:text-gold-400" title="Align Right"><i class="fa-solid fa-align-right"></i></button>
+    <div class="h-4 w-px bg-choco-700 mx-1"></div>
+    <button onclick="deleteSelectedImg()" class="p-1 text-red-400 hover:text-red-300" title="Delete Image"><i class="fa-regular fa-trash-can"></i></button>
+  </div>
+
+  <!-- Master Header -->
+  <header class="chocolate-gradient text-white shadow-xl sticky top-0 z-40 border-b border-choco-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+      
+      <!-- Brand & Creator Signature Badge -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-gold-400 to-amber-600 text-choco-950 flex items-center justify-center font-black text-2xl shadow-lg border border-gold-300">
+          <i class="fa-solid fa-pen-nib"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight">
+              <span class="text-gold-400 font-mono">dev</span><span class="text-white">&gt;</span><span class="text-white">NotePad</span>
+            </h1>
+            <span class="text-[10px] bg-gold-500/25 text-gold-300 border border-gold-500/50 px-2 py-0.5 rounded-full font-bold hidden sm:inline-block">UNLIMITED TRANSLATOR</span>
+          </div>
+          <p class="text-[11px] text-choco-200 flex items-center gap-1.5 flex-wrap">
+            <span>Crafted with passion by <strong class="text-gold-400 font-bold tracking-wide">Dev.MosabbiR</strong></span>
+            <span class="hidden sm:inline">•</span>
+            <span class="text-emerald-400 font-medium hidden sm:inline-flex items-center gap-1"><i class="fa-solid fa-bolt text-[10px]"></i> Live Unlimited Auto-Sync</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons & Font Generator Hub Trigger -->
+      <div class="flex items-center gap-2">
+        <!-- Live Translation Toggle Status -->
+        <button id="liveTranslateToggle" onclick="toggleLiveSync()" class="px-3 py-1.5 rounded-xl bg-choco-800/90 hover:bg-choco-700 text-xs font-semibold border border-choco-600 flex items-center gap-2 transition" title="Toggle Real-Time Dual Translation">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" id="liveDot"></span>
+          <span class="hidden md:inline text-choco-200">Auto Live:</span> <b id="liveStatusText" class="text-emerald-400">ACTIVE</b>
+        </button>
+
+        <!-- Picsart 100+ Font Generator Hub Trigger -->
+        <button onclick="togglePicsartModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-600 via-choco-600 to-choco-800 hover:brightness-110 text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition border border-gold-500 shadow-md">
+          <i class="fa-solid fa-wand-magic-sparkles text-gold-300 text-sm"></i>
+          <span class="tracking-wide">✨ 100+ Fonts</span>
+        </button>
+
+        <!-- Context Menu Button (Actions) -->
+        <div class="relative">
+          <button id="menuDropdownBtn" onclick="toggleActionMenu()" class="px-3.5 py-2 rounded-xl bg-choco-950 hover:bg-black text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition border border-choco-700 shadow-md">
+            <i class="fa-solid fa-ellipsis-vertical text-gold-400 text-sm"></i>
+            <span class="hidden sm:inline">Actions</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-choco-300"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="actionMenu" class="absolute right-0 mt-2 w-64 bg-[#1E1F22] text-gray-200 rounded-2xl shadow-2xl border border-gray-700 py-2 z-50 text-sm font-medium hidden">
+            <!-- Print -->
+            <button onclick="triggerPrint()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center justify-between text-left transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-print w-4 text-gray-400"></i> Print</span>
+              <span class="text-[10px] text-gray-400 font-mono bg-black/40 px-1.5 py-0.5 rounded border border-gray-700">CTRL P</span>
+            </button>
+
+            <!-- Download / Export -->
+            <button onclick="openExportModal()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center justify-between text-left transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-download w-4 text-gray-400"></i> Download / Export</span>
+              <i class="fa-solid fa-chevron-right text-xs text-gray-500"></i>
+            </button>
+
+            <!-- Open / Import File -->
+            <label class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center justify-between text-left transition cursor-pointer">
+              <span class="flex items-center gap-3"><i class="fa-regular fa-folder-open w-4 text-gray-400"></i> Open / Import</span>
+              <input type="file" id="fileImporter" class="hidden" accept=".txt,.md,.doc,.html,.json" onchange="importUserFile(this)">
+            </label>
+
+            <!-- History Feature -->
+            <button onclick="openHistoryModal()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center justify-between text-left transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left w-4 text-gold-400"></i> Version History</span>
+              <span class="text-[10px] text-emerald-400 font-mono bg-black/40 px-1.5 py-0.5 rounded border border-gray-700" id="historyCounterBadge">0</span>
+            </button>
+
+            <!-- Share -->
+            <button onclick="shareNotepad()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 text-left transition">
+              <i class="fa-solid fa-arrow-up-from-bracket w-4 text-gray-400"></i> Share
+            </button>
+
+            <!-- Copy Link -->
+            <button onclick="copyShareableLink()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center justify-between text-left transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-link w-4 text-gray-400"></i> Copy Link</span>
+              <span class="text-[10px] text-gray-400 font-mono bg-black/40 px-1.5 py-0.5 rounded border border-gray-700">CTRL L</span>
+            </button>
+
+            <!-- Info -->
+            <button onclick="openInfoModal()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 text-left transition">
+              <i class="fa-solid fa-circle-info w-4 text-gray-400"></i> Info
+            </button>
+
+            <div class="my-1.5 border-t border-gray-700"></div>
+
+            <!-- Password Protect -->
+            <button onclick="openPasswordModal()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 text-left transition">
+              <i class="fa-solid fa-lock w-4 text-gray-400" id="lockMenuIcon"></i>
+              <span id="lockMenuText">Password Protect</span>
+            </button>
+
+            <!-- Auto Expire -->
+            <button onclick="openAutoExpireModal()" class="w-full px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 text-left transition">
+              <i class="fa-regular fa-clock w-4 text-gray-400"></i> Auto Expire
+            </button>
+
+            <!-- Delete Note -->
+            <button onclick="confirmDeleteNote()" class="w-full px-4 py-2.5 hover:bg-red-500/20 text-red-400 flex items-center gap-3 text-left transition">
+              <i class="fa-regular fa-trash-can w-4 text-red-400"></i> Delete Note
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Complete Rich-Text Toolbar -->
+  <nav id="topToolbar" class="bg-choco-950 text-gray-200 border-b border-choco-800 px-3 sm:px-6 py-2 shadow-md sticky top-[61px] z-30 overflow-x-auto">
+    <div class="max-w-7xl mx-auto flex items-center flex-wrap gap-1 sm:gap-2">
+      
+      <!-- Headings Dropdown -->
+      <select id="headingSelect" onchange="applyBlockFormat(this.value)" class="bg-choco-900 hover:bg-choco-800 text-gray-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 border border-choco-700 focus:outline-none focus:ring-1 focus:ring-gold-500 cursor-pointer">
+        <option value="p">Normal Text ▾</option>
+        <option value="h1">Heading 1 (H1)</option>
+        <option value="h2">Heading 2 (H2)</option>
+        <option value="h3">Heading 3 (H3)</option>
+        <option value="h4">Subtitle (H4)</option>
+        <option value="pre">Code Preformatted</option>
+      </select>
+
+      <div class="h-4 w-px bg-choco-800 mx-0.5"></div>
+
+      <!-- Bold (B) -->
+      <button onclick="formatDoc('bold')" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 font-bold flex items-center justify-center transition" title="Bold (Ctrl+B)">
+        <i class="fa-solid fa-bold text-xs"></i>
+      </button>
+
+      <!-- Italic (I) -->
+      <button onclick="formatDoc('italic')" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 italic flex items-center justify-center transition" title="Italic (Ctrl+I)">
+        <i class="fa-solid fa-italic text-xs"></i>
+      </button>
+
+      <!-- Underline (U) -->
+      <button onclick="formatDoc('underline')" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 underline flex items-center justify-center transition" title="Underline (Ctrl+U)">
+        <i class="fa-solid fa-underline text-xs"></i>
+      </button>
+
+      <!-- Hyperlink (Link) -->
+      <button onclick="insertLinkPrompt()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Insert Link">
+        <i class="fa-solid fa-link text-xs"></i>
+      </button>
+
+      <!-- Text Color (T ▾) -->
+      <div class="relative flex items-center">
+        <label class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center cursor-pointer transition" title="Text Color">
+          <span class="font-bold text-xs flex items-center gap-0.5">T<i class="fa-solid fa-caret-down text-[9px] text-gray-400"></i></span>
+          <input type="color" onchange="formatDoc('foreColor', this.value)" class="opacity-0 absolute w-0 h-0">
+        </label>
+      </div>
+
+      <!-- Highlighter Color (Marker ▾) -->
+      <div class="relative flex items-center">
+        <label class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center cursor-pointer transition" title="Highlight Color">
+          <i class="fa-solid fa-pen-nib text-xs"></i>
+          <i class="fa-solid fa-caret-down text-[9px] text-gray-400 ml-0.5"></i>
+          <input type="color" onchange="formatDoc('hiliteColor', this.value)" value="#f5de88" class="opacity-0 absolute w-0 h-0">
+        </label>
+      </div>
+
+      <div class="h-4 w-px bg-choco-800 mx-0.5"></div>
+
+      <!-- Bulleted List -->
+      <button onclick="formatDoc('insertUnorderedList')" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Bulleted List">
+        <i class="fa-solid fa-list-ul text-xs"></i>
+      </button>
+
+      <!-- Numbered List -->
+      <button onclick="formatDoc('insertOrderedList')" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Numbered List">
+        <i class="fa-solid fa-list-ol text-xs"></i>
+      </button>
+
+      <!-- Checklist -->
+      <button onclick="insertChecklist()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Interactive Checklist">
+        <i class="fa-solid fa-list-check text-xs"></i>
+      </button>
+
+      <!-- Table Insert -->
+      <button onclick="insertQuickTable()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Insert 3x3 Table">
+        <i class="fa-solid fa-table text-xs"></i>
+      </button>
+
+      <!-- Image Insert -->
+      <label class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center cursor-pointer transition" title="Insert Image from Computer">
+        <i class="fa-regular fa-image text-xs"></i>
+        <input type="file" accept="image/*" class="hidden" onchange="handleImageFileInput(this)">
+      </label>
+
+      <!-- Blockquote -->
+      <button onclick="insertQuoteBlock()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Blockquote">
+        <i class="fa-solid fa-quote-left text-xs"></i>
+      </button>
+
+      <!-- Code Block -->
+      <button onclick="insertCodeBlock()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 font-mono text-xs flex items-center justify-center transition" title="Code Block">
+        <i class="fa-solid fa-code text-xs"></i>
+      </button>
+
+      <div class="h-4 w-px bg-choco-800 mx-0.5"></div>
+
+      <!-- Background Paper Style -->
+      <select id="gridStyleSelect" onchange="changeGridPattern(this.value)" class="bg-choco-900 hover:bg-choco-800 text-gray-200 text-xs font-semibold rounded-lg px-2 py-1.5 border border-choco-700 outline-none cursor-pointer">
+        <option value="none">Plain Paper</option>
+        <option value="lines">Lined Grid</option>
+        <option value="dots">Dot Grid</option>
+        <option value="boxes">Graph Grid</option>
+      </select>
+
+      <!-- Quick Save Snapshot to History -->
+      <button onclick="saveManualHistorySnapshot()" class="w-7 h-7 rounded hover:bg-choco-800 text-gold-400 flex items-center justify-center transition" title="Save Current Snapshot to History">
+        <i class="fa-solid fa-bookmark text-xs"></i>
+      </button>
+
+      <!-- Find & Replace Trigger -->
+      <button onclick="toggleFindReplaceBar()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition" title="Find &amp; Replace">
+        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+      </button>
+
+      <!-- Zen Mode (Fullscreen) -->
+      <button onclick="toggleZenMode()" class="w-7 h-7 rounded hover:bg-choco-800 text-gray-200 flex items-center justify-center transition ml-auto" title="Zen Fullscreen Mode">
+        <i class="fa-solid fa-expand text-xs"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Find & Replace Collapsible Panel -->
+  <div id="findReplaceBar" class="bg-choco-100 border-b border-choco-300 px-4 py-2 hidden">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-2 text-xs">
+      <div class="flex items-center gap-1 bg-white px-2.5 py-1 rounded-xl border border-choco-300">
+        <i class="fa-solid fa-search text-choco-400"></i>
+        <input type="text" id="findInput" placeholder="Find text..." class="outline-none text-xs w-36 sm:w-48 bg-transparent text-choco-900">
+      </div>
+      <div class="flex items-center gap-1 bg-white px-2.5 py-1 rounded-xl border border-choco-300">
+        <i class="fa-solid fa-arrow-right-arrow-left text-choco-400"></i>
+        <input type="text" id="replaceInput" placeholder="Replace with..." class="outline-none text-xs w-36 sm:w-48 bg-transparent text-choco-900">
+      </div>
+      <button onclick="performReplace(false)" class="px-3 py-1 bg-choco-700 text-white rounded-xl hover:bg-choco-800 font-medium transition">Replace</button>
+      <button onclick="performReplace(true)" class="px-3 py-1 bg-choco-900 text-white rounded-xl hover:bg-black font-medium transition">Replace All</button>
+      <button onclick="toggleFindReplaceBar()" class="text-choco-600 hover:text-choco-900 ml-auto"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+
+  <!-- MAIN DUAL ARTBOARD WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full" id="workspaceContainer">
+    
+    <!-- Central Control Toolbar -->
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-4 bg-choco-100 p-2.5 rounded-2xl border border-choco-300 shadow-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-choco-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-choco-600"></i> Controls:
+        </span>
+        <button onclick="convertBanglishToBangla()" class="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition shadow-sm flex items-center gap-1.5" title="Convert Banglish to Bangla">
+          <i class="fa-solid fa-language"></i> Banglish → বাংলা
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <button onclick="openHistoryModal()" class="px-3 py-1.5 text-xs bg-choco-700 hover:bg-choco-800 text-gold-300 font-semibold rounded-xl transition shadow-sm flex items-center gap-1.5" title="Version History">
+          <i class="fa-solid fa-clock-rotate-left"></i> History
+        </button>
+        <button onclick="swapArtboards()" class="px-3 py-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-choco-950 font-bold rounded-xl transition shadow-sm flex items-center gap-1.5" title="Swap Artboards">
+          <i class="fa-solid fa-right-left"></i> Swap
+        </button>
+        <button onclick="triggerManualTranslation()" class="px-3 py-1.5 text-xs bg-choco-800 hover:bg-choco-900 text-white font-semibold rounded-xl transition shadow-sm flex items-center gap-1.5" title="Force Translate Unlimited Text Now">
+          <i class="fa-solid fa-arrows-rotate" id="manualSyncIcon"></i> Force Translate
+        </button>
+        <button onclick="clearBothArtboards()" class="px-2.5 py-1.5 text-xs bg-white hover:bg-red-50 text-red-600 font-semibold rounded-xl border border-choco-300 transition" title="Clear Both">
+          <i class="fa-regular fa-trash-can"></i> Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Dual Artboards Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      
+      <!-- ARTBOARD 1 (Source / Default English) -->
+      <div class="bg-white rounded-3xl shadow-lg border-2 border-choco-200 overflow-hidden flex flex-col transition hover:border-choco-400" id="leftCard">
+        <!-- Top Bar -->
+        <div class="bg-choco-100/90 px-4 py-3 border-b border-choco-200 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-choco-700 inline-block shadow-sm"></span>
+            <span class="font-bold text-choco-900 text-sm">Artboard 1 (Source)</span>
+            
+            <!-- Language Select -->
+            <select id="srcLang" onchange="queueLiveSyncTranslation(true)" class="text-xs font-semibold bg-white border border-choco-300 rounded-xl px-2.5 py-1 text-choco-900 focus:ring-1 focus:ring-choco-500 cursor-pointer">
+              <option value="en" selected>English (Default)</option>
+              <option value="bn">Bengali (বাংলা)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="es">Spanish (Español)</option>
+              <option value="fr">French (Français)</option>
+              <option value="ar">Arabic (العربية)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="ru">Russian (Русский)</option>
+            </select>
+          </div>
+
+          <!-- Quick Tools -->
+          <div class="flex items-center gap-1.5">
+            <button id="voiceBtn1" onclick="toggleVoiceTyping('leftEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Voice Typing">
+              <i class="fa-solid fa-microphone text-amber-600" id="voiceIcon1"></i>
+            </button>
+            <button onclick="speakNote('leftEditor', 'srcLang')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Read Aloud">
+              <i class="fa-solid fa-volume-high text-choco-700"></i>
+            </button>
+            <button onclick="pasteClipboard('leftEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Paste Clipboard">
+              <i class="fa-regular fa-paste"></i> Paste
+            </button>
+            <button onclick="copyArtboardText('leftEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Copy Content">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+            <button onclick="clearArtboard('leftEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-red-50 text-red-600 rounded-xl border border-choco-200 transition" title="Clear Artboard">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editable Sheet -->
+        <div class="p-6 relative bg-choco-50/40" id="leftEditorWrap">
+          <div id="leftEditor" contenteditable="true" spellcheck="false" data-placeholder="Paste or type unlimited text here... (Auto-translates instantly to Artboard 2)" class="editor-sheet text-base text-choco-950 focus:outline-none select-text"></div>
+        </div>
+
+        <!-- Word & Character Counter Footer -->
+        <div class="bg-choco-100/60 px-4 py-2 border-t border-choco-200 flex items-center justify-between text-xs text-choco-600">
+          <span id="leftStats">Words: 0 | Chars: 0</span>
+          <span class="font-mono text-[10px] text-choco-500 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> READY (UNLIMITED)
+          </span>
+        </div>
+      </div>
+
+      <!-- ARTBOARD 2 (Target / Default Bangla) -->
+      <div class="bg-white rounded-3xl shadow-lg border-2 border-choco-200 overflow-hidden flex flex-col transition hover:border-choco-400" id="rightCard">
+        <!-- Top Bar -->
+        <div class="bg-choco-100/90 px-4 py-3 border-b border-choco-200 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-gold-500 inline-block shadow-sm"></span>
+            <span class="font-bold text-choco-900 text-sm">Artboard 2 (Target)</span>
+            
+            <!-- Language Select -->
+            <select id="destLang" onchange="queueLiveSyncTranslation(true)" class="text-xs font-semibold bg-white border border-choco-300 rounded-xl px-2.5 py-1 text-choco-900 focus:ring-1 focus:ring-choco-500 cursor-pointer">
+              <option value="bn" selected>Bengali (বাংলা)</option>
+              <option value="en">English (Default)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="es">Spanish (Español)</option>
+              <option value="fr">French (Français)</option>
+              <option value="ar">Arabic (العربية)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="ru">Russian (Русский)</option>
+            </select>
+          </div>
+
+          <!-- Quick Tools -->
+          <div class="flex items-center gap-1.5">
+            <button id="voiceBtn2" onclick="toggleVoiceTyping('rightEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Voice Typing">
+              <i class="fa-solid fa-microphone text-amber-600" id="voiceIcon2"></i>
+            </button>
+            <button onclick="speakNote('rightEditor', 'destLang')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Read Aloud">
+              <i class="fa-solid fa-volume-high text-choco-700"></i>
+            </button>
+            <button onclick="pasteClipboard('rightEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Paste Clipboard">
+              <i class="fa-regular fa-paste"></i> Paste
+            </button>
+            <button onclick="copyArtboardText('rightEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-choco-50 text-choco-800 rounded-xl border border-choco-200 transition" title="Copy Content">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+            <button onclick="clearArtboard('rightEditor')" class="px-2.5 py-1 text-xs bg-white hover:bg-red-50 text-red-600 rounded-xl border border-choco-200 transition" title="Clear Artboard">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editable Sheet -->
+        <div class="p-6 relative bg-choco-50/40" id="rightEditorWrap">
+          <div id="rightEditor" contenteditable="true" spellcheck="false" data-placeholder="Live auto-translated Bengali text will stream here continuously..." class="editor-sheet text-base text-choco-950 focus:outline-none select-text"></div>
+        </div>
+
+        <!-- Word & Character Counter Footer with Live Status -->
+        <div class="bg-choco-100/60 px-4 py-2 border-t border-choco-200 flex items-center justify-between text-xs text-choco-600">
+          <span id="rightStats">Words: 0 | Chars: 0</span>
+          <span id="syncProgressText" class="font-mono text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+            <i class="fa-solid fa-check"></i> SYNCED
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- VERSION HISTORY MODAL -->
+  <div id="historyModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-gold-500 max-w-2xl w-full p-6 text-choco-900 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-choco-200">
+        <h3 class="text-lg font-black text-choco-900 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-gold-500"></i> Version History (Saved Notes)
+        </h3>
+        <button onclick="closeHistoryModal()" class="text-choco-400 hover:text-choco-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="my-3 flex items-center justify-between text-xs">
+        <span class="text-choco-600 font-medium">Automatic &amp; manual saved snapshots from your session:</span>
+        <button onclick="clearAllHistory()" class="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1">
+          <i class="fa-regular fa-trash-can"></i> Clear History
+        </button>
+      </div>
+
+      <div id="historyListContainer" class="overflow-y-auto space-y-3 flex-1 pr-1"></div>
+
+      <div class="pt-4 border-t border-choco-200 flex justify-between items-center mt-3">
+        <button onclick="saveManualHistorySnapshot()" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-600 text-choco-950 font-bold text-xs transition flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> Save Current Snapshot
+        </button>
+        <button onclick="closeHistoryModal()" class="px-4 py-2 rounded-xl bg-choco-100 hover:bg-choco-200 text-choco-800 text-xs font-semibold transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICSART 100+ FONT HUB MODAL -->
+  <div id="fancyModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-gold-500 max-w-4xl w-full p-6 text-choco-900 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-choco-200">
+        <h3 class="text-lg font-black text-choco-900 flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-gold-500"></i> 100+ Picsart Font Generator Hub
+        </h3>
+        <button onclick="togglePicsartModal()" class="text-choco-400 hover:text-choco-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="my-4">
+        <label class="block text-xs font-bold text-choco-700 mb-1">Type text to generate 100+ stylish variations:</label>
+        <input type="text" id="fontInputText" value="Dev.MosabbiR Unlimited NotePad" oninput="renderFontStyles(this.value)" class="w-full px-4 py-2.5 rounded-xl border border-choco-300 focus:outline-none focus:ring-2 focus:ring-gold-500 text-sm font-medium text-choco-900 bg-choco-50/50">
+      </div>
+
+      <div id="fontStylesGrid" class="overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 pr-1"></div>
+
+      <div class="pt-4 border-t border-choco-200 flex justify-end mt-2">
+        <button onclick="togglePicsartModal()" class="px-5 py-2 rounded-xl bg-choco-900 text-white font-semibold text-xs hover:bg-black transition">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT / DOWNLOAD MODAL -->
+  <div id="exportModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-gold-500 max-w-md w-full p-6 text-choco-900">
+      <div class="flex items-center justify-between pb-3 border-b border-choco-200 mb-4">
+        <h3 class="text-lg font-black text-choco-900 flex items-center gap-2">
+          <i class="fa-solid fa-download text-gold-500"></i> Download &amp; Export
+        </h3>
+        <button onclick="closeExportModal()" class="text-choco-400 hover:text-choco-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-2.5">
+        <button onclick="exportToWordDoc()" class="w-full p-3 rounded-2xl bg-choco-50 hover:bg-choco-100 border border-choco-200 flex items-center justify-between text-left transition">
+          <span class="flex items-center gap-3 font-semibold text-sm text-choco-900"><i class="fa-regular fa-file-word text-blue-600 text-lg w-5"></i> Microsoft Word (.doc)</span>
+          <span class="text-[11px] text-choco-500">Rich Doc</span>
+        </button>
+        <button onclick="exportToPDF()" class="w-full p-3 rounded-2xl bg-choco-50 hover:bg-choco-100 border border-choco-200 flex items-center justify-between text-left transition">
+          <span class="flex items-center gap-3 font-semibold text-sm text-choco-900"><i class="fa-regular fa-file-pdf text-red-600 text-lg w-5"></i> Print / Save as PDF</span>
+          <span class="text-[11px] text-choco-500">High-Res</span>
+        </button>
+        <button onclick="exportToMarkdown()" class="w-full p-3 rounded-2xl bg-choco-50 hover:bg-choco-100 border border-choco-200 flex items-center justify-between text-left transition">
+          <span class="flex items-center gap-3 font-semibold text-sm text-choco-900"><i class="fa-brands fa-markdown text-purple-600 text-lg w-5"></i> Markdown (.md)</span>
+          <span class="text-[11px] text-choco-500">Clean MD</span>
+        </button>
+        <button onclick="exportToTxt()" class="w-full p-3 rounded-2xl bg-choco-50 hover:bg-choco-100 border border-choco-200 flex items-center justify-between text-left transition">
+          <span class="flex items-center gap-3 font-semibold text-sm text-choco-900"><i class="fa-regular fa-file-lines text-choco-700 text-lg w-5"></i> Plain Text (.txt)</span>
+          <span class="text-[11px] text-choco-500">Raw Text</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTE INFO MODAL -->
+  <div id="infoModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-gold-500 max-w-sm w-full p-6 text-choco-900">
+      <div class="flex items-center justify-between pb-3 border-b border-choco-200 mb-4">
+        <h3 class="text-base font-bold text-choco-900 flex items-center gap-2"><i class="fa-solid fa-circle-info text-gold-500"></i> Workspace Statistics</h3>
+        <button onclick="closeInfoModal()" class="text-choco-400 hover:text-choco-700"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-2 text-xs" id="infoModalContent"></div>
+    </div>
+  </div>
+
+  <!-- PASSWORD PROTECT MODAL -->
+  <div id="passwordModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-gold-500 max-w-sm w-full p-6 text-choco-900">
+      <div class="flex items-center justify-between pb-3 border-b border-choco-200 mb-4">
+        <h3 class="text-base font-bold text-choco-900 flex items-center gap-2"><i class="fa-solid fa-lock text-gold-500"></i> Set Note Password</h3>
+        <button onclick="closePasswordModal()" class="text-choco-400 hover:text-choco-700"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p class="text-xs text-choco-600 mb-3">Lock your notepad with a personal PIN or passphrase:</p>
+      <input type="password" id="notePasscode" placeholder="Enter secret password..." class="w-full px-3.5 py-2 rounded-xl border border-choco-300 text-xs mb-4 focus:ring-1 focus:ring-gold-500 outline-none">
+      <div class="flex justify-end gap-2">
+        <button onclick="removePasswordLock()" class="px-3 py-1.5 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 font-semibold text-xs">Remove</button>
+        <button onclick="savePasswordLock()" class="px-4 py-1.5 rounded-xl bg-choco-900 hover:bg-black text-white font-semibold text-xs">Save Lock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNLOCK OVERLAY -->
+  <div id="lockOverlay" class="fixed inset-0 z-50 bg-choco-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4">
+    <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-gold-400 to-amber-600 text-choco-950 flex items-center justify-center text-3xl shadow-xl mb-4 border border-gold-300">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <h2 class="text-xl font-bold text-white mb-2">dev&gt;NotePad Protected</h2>
+    <p class="text-xs text-choco-200 mb-5">Please enter the security password to unlock this note:</p>
+    <div class="flex items-center gap-2 w-full max-w-xs">
+      <input type="password" id="unlockPassInput" placeholder="Password..." class="flex-1 px-4 py-2.5 rounded-xl border border-choco-700 bg-choco-900 text-white text-xs outline-none focus:ring-1 focus:ring-gold-500">
+      <button onclick="unlockWorkspace()" class="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-choco-950 font-bold text-xs rounded-xl transition">Unlock</button>
+    </div>
+  </div>
+
+  <!-- Footer with MosabbiR Credits -->
+  <footer class="bg-choco-950 border-t border-choco-800 text-choco-300 py-4 px-4 sm:px-6 text-center text-xs mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>
+        <span>&copy; 2026 <strong>dev&gt;NotePad</strong>. All rights reserved.</span>
+      </p>
+      <div class="flex items-center gap-2">
+        <span class="text-choco-400">Created &amp; Maintained by</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold">Dev.MosabbiR</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CORE LOGIC & UNLIMITED AUTO-TRANSLATE ENGINE -->
+  <script>
+    const leftEditor = document.getElementById('leftEditor');
+    const rightEditor = document.getElementById('rightEditor');
+    const srcLang = document.getElementById('srcLang');
+    const destLang = document.getElementById('destLang');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastIcon = document.getElementById('toastIcon');
+    const syncProgressText = document.getElementById('syncProgressText');
+
+    let isLiveSync = true;
+    let liveTranslateTimeout = null;
+    let selectedImage = null;
+    let autoExpireTimer = null;
+    let workspacePassword = localStorage.getItem('dev_notepad_pass') || '';
+    let currentTranslationSession = 0;
+
+    // History Storage Key
+    const HISTORY_KEY = 'dev_notepad_history_v1';
+    let historyEntries = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+
+    // --- Toast Utility ---
+    function showToast(msg, icon = 'fa-check') {
+      toastMsg.innerText = msg;
+      toastIcon.className = `fa-solid ${icon} text-gold-400 text-lg`;
+      toast.classList.remove('-translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('-translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    // --- Grid Paper Selector ---
+    function changeGridPattern(val) {
+      const leftW = document.getElementById('leftEditorWrap');
+      const rightW = document.getElementById('rightEditorWrap');
+      [leftW, rightW].forEach(w => {
+        w.classList.remove('grid-lines', 'grid-dots', 'grid-boxes');
+        if (val === 'lines') w.classList.add('grid-lines');
+        if (val === 'dots') w.classList.add('grid-dots');
+        if (val === 'boxes') w.classList.add('grid-boxes');
+      });
+    }
+
+    // --- Local Persistence & History Snapshots ---
+    function saveToLocalStorage() {
+      localStorage.setItem('dev_notepad_left', leftEditor.innerHTML);
+      localStorage.setItem('dev_notepad_right', rightEditor.innerHTML);
+      updateStats();
+    }
+
+    function createHistorySnapshot(isAuto = true) {
+      const leftText = leftEditor.innerText.trim();
+      const rightText = rightEditor.innerText.trim();
+      if (!leftText && !rightText) return;
+
+      const latest = historyEntries[0];
+      if (latest && latest.left === leftEditor.innerHTML && latest.right === rightEditor.innerHTML) {
+        return;
+      }
+
+      const snapshot = {
+        id: Date.now(),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        date: new Date().toLocaleDateString(),
+        left: leftEditor.innerHTML,
+        right: rightEditor.innerHTML,
+        preview: (leftText || rightText).substring(0, 75) + '...',
+        isAuto: isAuto
+      };
+
+      historyEntries.unshift(snapshot);
+      if (historyEntries.length > 30) historyEntries.pop();
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
+      updateHistoryBadge();
+    }
+
+    function updateHistoryBadge() {
+      const badge = document.getElementById('historyCounterBadge');
+      if (badge) badge.innerText = historyEntries.length;
+    }
+
+    // --- Version History Modal Management ---
+    function openHistoryModal() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      renderHistoryList();
+      document.getElementById('historyModal').classList.remove('hidden');
+      document.getElementById('historyModal').classList.add('flex');
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('flex');
+      document.getElementById('historyModal').classList.add('hidden');
+    }
+
+    function saveManualHistorySnapshot() {
+      createHistorySnapshot(false);
+      renderHistoryList();
+      showToast('Current snapshot saved to History!', 'fa-bookmark');
+    }
+
+    function restoreHistoryVersion(id) {
+      const entry = historyEntries.find(h => h.id === id);
+      if (!entry) return;
+      if (confirm('Do you want to restore this version to your Artboards?')) {
+        leftEditor.innerHTML = entry.left || '';
+        rightEditor.innerHTML = entry.right || '';
+        saveToLocalStorage();
+        closeHistoryModal();
+        showToast('Restored version successfully!', 'fa-clock-rotate-left');
+      }
+    }
+
+    function deleteHistoryItem(id, event) {
+      event.stopPropagation();
+      historyEntries = historyEntries.filter(h => h.id !== id);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
+      renderHistoryList();
+      updateHistoryBadge();
+      showToast('Version deleted from history');
+    }
+
+    function clearAllHistory() {
+      if (historyEntries.length === 0) return;
+      if (confirm('Are you sure you want to clear all saved version history?')) {
+        historyEntries = [];
+        localStorage.removeItem(HISTORY_KEY);
+        renderHistoryList();
+        updateHistoryBadge();
+        showToast('History wiped clean');
+      }
+    }
+
+    function renderHistoryList() {
+      const container = document.getElementById('historyListContainer');
+      if (!container) return;
+
+      if (historyEntries.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-choco-400 text-xs">
+            <i class="fa-solid fa-clock-rotate-left text-3xl mb-2 opacity-50 block"></i>
+            No history versions recorded yet.<br>Snapshots will automatically appear as you edit.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = historyEntries.map(item => `
+        <div onclick="restoreHistoryVersion(${item.id})" class="p-3 rounded-2xl bg-choco-50/70 hover:bg-choco-100 border border-choco-200 cursor-pointer transition flex items-center justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${item.isAuto ? 'bg-choco-200 text-choco-800' : 'bg-gold-500/30 text-choco-900 border border-gold-500/50'}">
+                ${item.isAuto ? 'Auto-Save' : 'Manual Snapshot'}
+              </span>
+              <span class="text-[11px] text-choco-500 font-mono">${item.date} at ${item.timestamp}</span>
+            </div>
+            <p class="text-xs text-choco-800 truncate font-medium">${item.preview || 'Untitled note'}</p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="restoreHistoryVersion(${item.id})" class="px-2.5 py-1 text-[11px] bg-choco-800 text-white rounded-lg hover:bg-black font-semibold">Restore</button>
+            <button onclick="deleteHistoryItem(${item.id}, event)" class="p-1.5 text-red-400 hover:text-red-600 rounded-lg"><i class="fa-regular fa-trash-can text-xs"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- Rich Text ExecCommands ---
+    function formatDoc(cmd, val = null) {
+      document.execCommand(cmd, false, val);
+      saveToLocalStorage();
+    }
+
+    function applyBlockFormat(tag) {
+      document.execCommand('formatBlock', false, tag);
+      saveToLocalStorage();
+    }
+
+    function insertLinkPrompt() {
+      const url = prompt('Enter the link URL:', 'https://');
+      if (url) formatDoc('createLink', url);
+    }
+
+    function insertChecklist() {
+      const html = `<div class="todo-item"><input type="checkbox" class="todo-checkbox"><span>Checklist task...</span></div><br>`;
+      document.execCommand('insertHTML', false, html);
+      saveToLocalStorage();
+    }
+
+    function insertQuickTable() {
+      const tableHTML = `
+        <table class="w-full border border-choco-300">
+          <thead><tr><th class="border border-choco-300 p-2 bg-choco-100 font-bold">Col 1</th><th class="border border-choco-300 p-2 bg-choco-100 font-bold">Col 2</th><th class="border border-choco-300 p-2 bg-choco-100 font-bold">Col 3</th></tr></thead>
+          <tbody>
+            <tr><td class="border border-choco-300 p-2">Item 1</td><td class="border border-choco-300 p-2">Item 2</td><td class="border border-choco-300 p-2">Item 3</td></tr>
+            <tr><td class="border border-choco-300 p-2">Item 4</td><td class="border border-choco-300 p-2">Item 5</td><td class="border border-choco-300 p-2">Item 6</td></tr>
+          </tbody>
+        </table><br>`;
+      document.execCommand('insertHTML', false, tableHTML);
+      saveToLocalStorage();
+    }
+
+    function insertQuoteBlock() {
+      document.execCommand('formatBlock', false, 'blockquote');
+      saveToLocalStorage();
+    }
+
+    function insertCodeBlock() {
+      const codeHTML = `<pre><code>// Write your code snippet here...</code></pre><br>`;
+      document.execCommand('insertHTML', false, codeHTML);
+      saveToLocalStorage();
+    }
+
+    // --- Image Insertion & Resizing Handler ---
+    function handleImageFileInput(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgHTML = `<img src="${e.target.result}" class="img-align-center" style="width: 50%;">`;
+          document.execCommand('insertHTML', false, imgHTML);
+          saveToLocalStorage();
+          showToast('Image inserted into note!');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      const imgToolbar = document.getElementById('imageToolbar');
+      if (e.target.tagName === 'IMG' && e.target.closest('.editor-sheet')) {
+        if (selectedImage) selectedImage.classList.remove('selected-img');
+        selectedImage = e.target;
+        selectedImage.classList.add('selected-img');
+        const rect = selectedImage.getBoundingClientRect();
+        imgToolbar.style.top = `${Math.max(10, rect.top + window.scrollY - 45)}px`;
+        imgToolbar.style.left = `${Math.max(10, rect.left + window.scrollX)}px`;
+        imgToolbar.classList.remove('hidden');
+        imgToolbar.classList.add('flex');
+      } else if (!e.target.closest('#imageToolbar')) {
+        if (selectedImage) selectedImage.classList.remove('selected-img');
+        selectedImage = null;
+        imgToolbar.classList.add('hidden');
+        imgToolbar.classList.remove('flex');
+      }
+    });
+
+    function resizeSelectedImg(widthPercent) {
+      if (selectedImage) {
+        selectedImage.style.width = widthPercent;
+        saveToLocalStorage();
+      }
+    }
+
+    function alignSelectedImg(align) {
+      if (selectedImage) {
+        selectedImage.className = selectedImage.className.replace(/img-align-(left|center|right)/g, '');
+        selectedImage.classList.add(`img-align-${align}`);
+        saveToLocalStorage();
+      }
+    }
+
+    function deleteSelectedImg() {
+      if (selectedImage) {
+        selectedImage.remove();
+        document.getElementById('imageToolbar').classList.add('hidden');
+        selectedImage = null;
+        saveToLocalStorage();
+        showToast('Image removed');
+      }
+    }
+
+    // Drag & Drop Image directly onto Artboards
+    [leftEditor, rightEditor].forEach(editor => {
+      editor.addEventListener('dragover', (e) => { e.preventDefault(); editor.classList.add('drag-over'); });
+      editor.addEventListener('dragleave', () => editor.classList.remove('drag-over'));
+      editor.addEventListener('drop', (e) => {
+        e.preventDefault();
+        editor.classList.remove('drag-over');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              const img = document.createElement('img');
+              img.src = ev.target.result;
+              img.style.width = '50%';
+              img.className = 'img-align-center';
+              editor.appendChild(img);
+              saveToLocalStorage();
+              showToast('Image dropped and added!');
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+    });
+
+    // =========================================================================
+    // --- HIGH-SPEED UNLIMITED LIVE AUTO-TRANSLATE ENGINE (FIXED & TESTED) ---
+    // =========================================================================
+
+    function toggleLiveSync() {
+      isLiveSync = !isLiveSync;
+      const dot = document.getElementById('liveDot');
+      const text = document.getElementById('liveStatusText');
+      if (isLiveSync) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        text.className = 'text-emerald-400';
+        text.innerText = 'ACTIVE';
+        showToast('Auto Live Translation ON');
+        queueLiveSyncTranslation(true);
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-choco-400';
+        text.className = 'text-choco-400';
+        text.innerText = 'OFF';
+        showToast('Auto Live Translation Paused');
+      }
+    }
+
+    // Translate a single small chunk (< 400 chars) with fallback endpoints
+    async function translateSingleChunk(chunk, source, target) {
+      if (!chunk.trim()) return chunk;
+
+      // Method 1: Google Free Client API endpoint
+      try {
+        const gUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(chunk)}`;
+        const gRes = await fetch(gUrl);
+        if (gRes.ok) {
+          const gData = await gRes.json();
+          if (gData && gData[0]) {
+            return gData[0].map(item => item[0]).join('');
+          }
+        }
+      } catch (e) {
+        // Fallback to Method 2 if network fails
+      }
+
+      // Method 2: MyMemory API Fallback
+      try {
+        const mUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${source}|${target}`;
+        const mRes = await fetch(mUrl);
+        if (mRes.ok) {
+          const mData = await mRes.json();
+          if (mData.responseData && mData.responseData.translatedText) {
+            return mData.responseData.translatedText;
+          }
+        }
+      } catch (e) {
+        // Return raw chunk if all fail
+      }
+
+      return chunk;
+    }
+
+    // Split any huge unlimited article into safe grammatical chunks
+    function splitTextIntoSafeChunks(text, maxLen = 350) {
+      const paragraphs = text.split(/\n/);
+      const chunks = [];
+
+      paragraphs.forEach(p => {
+        if (!p.trim()) {
+          chunks.push({ text: '\n', isLineBreak: true });
+          return;
+        }
+
+        // Split by sentence punctuation (. ! ? ।)
+        const sentences = p.match(/[^.!?।]+[.!?।]+|[^.!?।]+$/g) || [p];
+        let current = "";
+
+        sentences.forEach(s => {
+          if ((current + s).length > maxLen) {
+            if (current) chunks.push({ text: current, isLineBreak: false });
+            current = s;
+          } else {
+            current += s;
+          }
+        });
+        if (current) chunks.push({ text: current, isLineBreak: false });
+        chunks.push({ text: '\n', isLineBreak: true });
+      });
+
+      return chunks;
+    }
+
+    // Main Unlimited Execution Process
+    async function processUnlimitedTranslation(sessionId) {
+      const fullText = leftEditor.innerText;
+      if (!fullText.trim()) {
+        rightEditor.innerHTML = '';
+        saveToLocalStorage();
+        syncProgressText.innerHTML = `<i class="fa-solid fa-check"></i> SYNCED`;
+        syncProgressText.className = "font-mono text-[10px] text-emerald-600 font-bold flex items-center gap-1";
+        return;
+      }
+
+      const sLang = srcLang.value;
+      const dLang = destLang.value;
+      const chunks = splitTextIntoSafeChunks(fullText, 350);
+
+      syncProgressText.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> TRANSLATING...`;
+      syncProgressText.className = "font-mono text-[10px] text-amber-600 font-bold flex items-center gap-1";
+
+      let translatedBuffer = "";
+
+      for (let i = 0; i < chunks.length; i++) {
+        // Cancel if a newer paste/edit occurred
+        if (sessionId !== currentTranslationSession) return;
+
+        const item = chunks[i];
+        if (item.isLineBreak) {
+          translatedBuffer += '\n';
+        } else {
+          const res = await translateSingleChunk(item.text, sLang, dLang);
+          translatedBuffer += res + " ";
+        }
+
+        // Live stream progress to Artboard 2
+        rightEditor.innerText = translatedBuffer.trim();
+        saveToLocalStorage();
+      }
+
+      if (sessionId === currentTranslationSession) {
+        syncProgressText.innerHTML = `<i class="fa-solid fa-check"></i> ALL SYNCED`;
+        syncProgressText.className = "font-mono text-[10px] text-emerald-600 font-bold flex items-center gap-1";
+      }
+    }
+
+    function queueLiveSyncTranslation(forceImmediate = false) {
+      if (!isLiveSync && !forceImmediate) return;
+      clearTimeout(liveTranslateTimeout);
+      currentTranslationSession++;
+      const session = currentTranslationSession;
+
+      const delay = forceImmediate ? 50 : 600; // instant response for paste/force
+      liveTranslateTimeout = setTimeout(() => {
+        processUnlimitedTranslation(session);
+      }, delay);
+    }
+
+    function triggerManualTranslation() {
+      const syncIcon = document.getElementById('manualSyncIcon');
+      if (syncIcon) syncIcon.classList.add('animate-spin');
+      showToast('Processing Unlimited Auto-Translate...', 'fa-arrows-rotate');
+      queueLiveSyncTranslation(true);
+      setTimeout(() => {
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+      }, 1500);
+    }
+
+    // --- Banglish to Bengali Phonetic Engine ---
+    function convertBanglishToBangla() {
+      const map = {
+        'ami': 'আমি', 'tumi': 'তুমি', 'apni': 'আপনি', 'kemon': 'কেমন', 'acho': 'আছো', 'achen': 'আছেন',
+        'valo': 'ভালো', 'bhalo': 'ভালো', 'dhonnobad': 'ধন্যবাদ', 'shob': 'সব', 'sob': 'সব', 'kichu': 'কিছু',
+        'amr': 'আমার', 'amar': 'আমার', 'tomar': 'তোমার', 'notepad': 'নোটপ্যাড', 'bangla': 'বাংলা',
+        'english': 'ইংরেজি', 'korbo': 'করবো', 'kore': 'করে', 'dao': 'দাও', 'hobe': 'হবে', 'dev': 'ডেভ',
+        'mosabbir': 'মোসাব্বির', 'ekhon': 'এখন', 'bhai': 'ভাই', 'ki': 'কি', 'khobor': 'খবর'
+      };
+      let text = leftEditor.innerText;
+      for (const [k, v] of Object.entries(map)) {
+        const regex = new RegExp(`\\b${k}\\b`, 'gi');
+        text = text.replace(regex, v);
+      }
+      leftEditor.innerText = text;
+      saveToLocalStorage();
+      createHistorySnapshot(false);
+      queueLiveSyncTranslation(true);
+      showToast('Banglish converted to বাংলা!');
+    }
+
+    // --- Swap Artboards ---
+    function swapArtboards() {
+      const tempHTML = leftEditor.innerHTML;
+      leftEditor.innerHTML = rightEditor.innerHTML;
+      rightEditor.innerHTML = tempHTML;
+
+      const tempLang = srcLang.value;
+      srcLang.value = destLang.value;
+      destLang.value = tempLang;
+
+      saveToLocalStorage();
+      createHistorySnapshot(false);
+      showToast('Artboards swapped successfully!');
+    }
+
+    // --- Clear Functions ---
+    function clearArtboard(id) {
+      document.getElementById(id).innerHTML = '';
+      saveToLocalStorage();
+      showToast('Artboard cleared');
+    }
+
+    function clearBothArtboards() {
+      if (confirm('Are you sure you want to clear both artboards?')) {
+        createHistorySnapshot(false);
+        leftEditor.innerHTML = '';
+        rightEditor.innerHTML = '';
+        saveToLocalStorage();
+        showToast('Both Artboards cleared');
+      }
+    }
+
+    function confirmDeleteNote() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      clearBothArtboards();
+    }
+
+    // --- Clipboard Paste/Copy Handlers ---
+    async function pasteClipboard(id) {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById(id).focus();
+        document.execCommand('insertText', false, text);
+        saveToLocalStorage();
+        if (id === 'leftEditor') queueLiveSyncTranslation(true);
+        showToast('Pasted & Live Translating...');
+      } catch (e) {
+        showToast('Allow clipboard access in browser', 'fa-triangle-exclamation');
+      }
+    }
+
+    function copyArtboardText(id) {
+      const el = document.getElementById(id);
+      navigator.clipboard.writeText(el.innerText).then(() => {
+        showToast('Copied to clipboard!');
+      });
+    }
+
+    // Listen to native paste (Ctrl+V / Cmd+V) to trigger instant auto-translation
+    leftEditor.addEventListener('paste', () => {
+      setTimeout(() => {
+        queueLiveSyncTranslation(true);
+      }, 50);
+    });
+
+    // --- Voice Typing (STT) & Speech (TTS) ---
+    function toggleVoiceTyping(editorId) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        showToast('Speech recognition not supported in browser', 'fa-triangle-exclamation');
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = editorId === 'leftEditor' ? (srcLang.value === 'bn' ? 'bn-BD' : 'en-US') : (destLang.value === 'bn' ? 'bn-BD' : 'en-US');
+      recognition.start();
+      showToast('Listening... Speak into microphone', 'fa-microphone');
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        const target = document.getElementById(editorId);
+        target.focus();
+        document.execCommand('insertText', false, ' ' + transcript);
+        saveToLocalStorage();
+        if (editorId === 'leftEditor') queueLiveSyncTranslation(true);
+        showToast('Voice converted & translated!');
+      };
+      recognition.onerror = function() {
+        showToast('Microphone error or stopped', 'fa-triangle-exclamation');
+      };
+    }
+
+    function speakNote(editorId, langSelectId) {
+      const text = document.getElementById(editorId).innerText.trim();
+      if (!text) {
+        showToast('No text to read aloud', 'fa-triangle-exclamation');
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = document.getElementById(langSelectId).value === 'bn' ? 'bn-BD' : 'en-US';
+      window.speechSynthesis.speak(utterance);
+      showToast('Reading aloud...', 'fa-volume-high');
+    }
+
+    // --- 100+ Picsart Font Generator Hub ---
+    const fontReplacements = [
+      { name: "Bold Serif", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D400 : 0x1D41A) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Italic Serif", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D434 : 0x1D44E) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Bold Italic Serif", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D468 : 0x1D482) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Script Cursive", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D49C : 0x1D4B6) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Bold Script", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D4D0 : 0x1D4EA) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Fraktur Gothic", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D504 : 0x1D51E) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Double Struck (Outline)", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D538 : 0x1D552) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Sans-Serif Clean", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D5A0 : 0x1D5BA) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Sans-Serif Bold", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D5D4 : 0x1D5EE) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Monospace Code", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1D670 : 0x1D68A) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Circled Bubble (Ⓐ)", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x24B6 : 0x24D0) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Squared Block (🄰)", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1F130 : 0x1F130) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) },
+      { name: "Black Squared (🅰)", transform: s => s.replace(/[a-zA-Z]/g, c => String.fromCodePoint((c <= 'Z' ? 0x1F170 : 0x1F170) + c.charCodeAt(0) - (c <= 'Z' ? 65 : 97))) }
+    ];
+
+    function togglePicsartModal() {
+      const modal = document.getElementById('fancyModal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+      if (!modal.classList.contains('hidden')) {
+        renderFontStyles(document.getElementById('fontInputText').value);
+      }
+    }
+
+    function renderFontStyles(text) {
+      const grid = document.getElementById('fontStylesGrid');
+      if (!text) text = "Dev.MosabbiR";
+      grid.innerHTML = fontReplacements.map(item => {
+        const transformed = item.transform(text);
+        return `
+          <div class="p-3 rounded-2xl bg-choco-50 hover:bg-choco-100 border border-choco-200 transition flex items-center justify-between gap-2">
+            <div class="flex-1 truncate">
+              <span class="text-[10px] text-choco-500 font-bold block">${item.name}</span>
+              <span class="text-sm font-semibold text-choco-950">${transformed}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="insertFancyText('${transformed.replace(/'/g, "\\'")}', 'leftEditor')" class="px-2 py-1 bg-choco-800 text-white rounded-lg text-xs font-semibold hover:bg-black">A1</button>
+              <button onclick="insertFancyText('${transformed.replace(/'/g, "\\'")}', 'rightEditor')" class="px-2 py-1 bg-gold-500 text-choco-950 rounded-lg text-xs font-bold hover:bg-gold-600">A2</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function insertFancyText(text, editorId) {
+      const target = document.getElementById(editorId);
+      target.focus();
+      document.execCommand('insertText', false, text);
+      saveToLocalStorage();
+      if (editorId === 'leftEditor') queueLiveSyncTranslation(true);
+      togglePicsartModal();
+      showToast('Inserted font style!');
+    }
+
+    // --- Action Dropdown Menu & Modals ---
+    function toggleActionMenu() {
+      document.getElementById('actionMenu').classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('actionMenu');
+      const btn = document.getElementById('menuDropdownBtn');
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function triggerPrint() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      window.print();
+    }
+
+    function openExportModal() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      document.getElementById('exportModal').classList.remove('hidden');
+      document.getElementById('exportModal').classList.add('flex');
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportModal').classList.remove('flex');
+      document.getElementById('exportModal').classList.add('hidden');
+    }
+
+    function exportToWordDoc() {
+      const content = `<html><body><h2>dev&gt;NotePad Workspace Note</h2><hr><h3>Artboard 1 (Source)</h3><div>${leftEditor.innerHTML}</div><br><hr><h3>Artboard 2 (Target)</h3><div>${rightEditor.innerHTML}</div></body></html>`;
+      const blob = new Blob(['\ufeff' + content], { type: 'application/msword' });
+      downloadBlob(blob, 'dev_notepad_document.doc');
+      closeExportModal();
+    }
+
+    function exportToPDF() {
+      closeExportModal();
+      window.print();
+    }
+
+    function exportToMarkdown() {
+      const mdContent = `# dev>NotePad Document\n\n## Artboard 1\n${leftEditor.innerText}\n\n## Artboard 2\n${rightEditor.innerText}\n\n---\n*Created with dev>NotePad by Dev.MosabbiR*`;
+      const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
+      downloadBlob(blob, 'dev_notepad_note.md');
+      closeExportModal();
+    }
+
+    function exportToTxt() {
+      const txt = `dev>NotePad Document\n\n[Artboard 1]\n${leftEditor.innerText}\n\n[Artboard 2]\n${rightEditor.innerText}`;
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      downloadBlob(blob, 'dev_notepad_note.txt');
+      closeExportModal();
+    }
+
+    function downloadBlob(blob, filename) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast(`Exported ${filename}!`);
+    }
+
+    function importUserFile(input) {
+      document.getElementById('actionMenu').classList.add('hidden');
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          leftEditor.innerText = e.target.result;
+          saveToLocalStorage();
+          createHistorySnapshot(false);
+          queueLiveSyncTranslation(true);
+          showToast(`Loaded ${file.name}! Translating...`);
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function shareNotepad() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      if (navigator.share) {
+        navigator.share({
+          title: 'dev>NotePad',
+          text: leftEditor.innerText.substring(0, 100),
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        copyShareableLink();
+      }
+    }
+
+    function copyShareableLink() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Link copied to clipboard (Ctrl+L)', 'fa-link');
+      });
+    }
+
+    function openInfoModal() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      const text = leftEditor.innerText + ' ' + rightEditor.innerText;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const chars = text.length;
+      const lines = text.split(/\r\n|\r|\n/).length;
+      const readingTime = Math.ceil(words / 200);
+
+      document.getElementById('infoModalContent').innerHTML = `
+        <div class="flex justify-between py-1 border-b border-choco-100"><span>Total Words:</span><b>${words}</b></div>
+        <div class="flex justify-between py-1 border-b border-choco-100"><span>Total Characters:</span><b>${chars}</b></div>
+        <div class="flex justify-between py-1 border-b border-choco-100"><span>Total Paragraphs / Lines:</span><b>${lines}</b></div>
+        <div class="flex justify-between py-1 border-b border-choco-100"><span>Estimated Reading Time:</span><b>${readingTime} min</b></div>
+        <div class="flex justify-between py-1 border-b border-choco-100"><span>Saved Versions in History:</span><b>${historyEntries.length}</b></div>
+        <div class="flex justify-between py-1 text-gold-600 font-bold"><span>Author / Developer:</span><b>Dev.MosabbiR</b></div>
+      `;
+      document.getElementById('infoModal').classList.remove('hidden');
+      document.getElementById('infoModal').classList.add('flex');
+    }
+
+    function closeInfoModal() {
+      document.getElementById('infoModal').classList.remove('flex');
+      document.getElementById('infoModal').classList.add('hidden');
+    }
+
+    // --- Password Security ---
+    function openPasswordModal() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      document.getElementById('passwordModal').classList.remove('hidden');
+      document.getElementById('passwordModal').classList.add('flex');
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').classList.remove('flex');
+      document.getElementById('passwordModal').classList.add('hidden');
+    }
+
+    function savePasswordLock() {
+      const pass = document.getElementById('notePasscode').value;
+      if (pass) {
+        localStorage.setItem('dev_notepad_pass', pass);
+        workspacePassword = pass;
+        closePasswordModal();
+        showToast('Password lock set successfully!', 'fa-lock');
+      }
+    }
+
+    function removePasswordLock() {
+      localStorage.removeItem('dev_notepad_pass');
+      workspacePassword = '';
+      document.getElementById('notePasscode').value = '';
+      closePasswordModal();
+      showToast('Password lock removed');
+    }
+
+    function unlockWorkspace() {
+      const input = document.getElementById('unlockPassInput').value;
+      if (input === workspacePassword) {
+        document.getElementById('lockOverlay').classList.remove('flex');
+        document.getElementById('lockOverlay').classList.add('hidden');
+        showToast('Workspace Unlocked!');
+      } else {
+        alert('Incorrect password! Please try again.');
+      }
+    }
+
+    // --- Auto Expire Timer ---
+    function openAutoExpireModal() {
+      document.getElementById('actionMenu').classList.add('hidden');
+      const minutes = prompt('Set note auto-expiration in minutes:', '10');
+      if (minutes && !isNaN(minutes) && Number(minutes) > 0) {
+        startAutoExpire(Number(minutes) * 60);
+      }
+    }
+
+    function startAutoExpire(seconds) {
+      clearInterval(autoExpireTimer);
+      const banner = document.getElementById('expireBanner');
+      const timeDisplay = document.getElementById('expireTimeLeft');
+      banner.classList.remove('hidden');
+      banner.classList.add('flex');
+
+      let remaining = seconds;
+      autoExpireTimer = setInterval(() => {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        timeDisplay.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        remaining--;
+        if (remaining < 0) {
+          clearInterval(autoExpireTimer);
+          leftEditor.innerHTML = '';
+          rightEditor.innerHTML = '';
+          saveToLocalStorage();
+          banner.classList.add('hidden');
+          showToast('Note expired and was wiped clean!', 'fa-trash-can');
+        }
+      }, 1000);
+      showToast(`Auto-expire armed for ${Math.round(seconds / 60)} min`);
+    }
+
+    function cancelAutoExpire() {
+      clearInterval(autoExpireTimer);
+      document.getElementById('expireBanner').classList.add('hidden');
+      showToast('Auto-expire cancelled');
+    }
+
+    // --- Find & Replace ---
+    function toggleFindReplaceBar() {
+      document.getElementById('findReplaceBar').classList.toggle('hidden');
+    }
+
+    function performReplace(replaceAll = false) {
+      const f = document.getElementById('findInput').value;
+      const r = document.getElementById('replaceInput').value;
+      if (!f) return;
+      [leftEditor, rightEditor].forEach(editor => {
+        let text = editor.innerHTML;
+        if (replaceAll) {
+          text = text.replaceAll(f, r);
+        } else {
+          text = text.replace(f, r);
+        }
+        editor.innerHTML = text;
+      });
+      saveToLocalStorage();
+      showToast(replaceAll ? 'Replaced all occurrences' : 'Replaced first occurrence');
+    }
+
+    // --- Zen Fullscreen Mode ---
+    function toggleZenMode() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // --- Realtime Stats & Listeners ---
+    function updateStats() {
+      const count = (el) => {
+        const t = el.innerText.trim();
+        const words = t ? t.split(/\s+/).length : 0;
+        const chars = t.length;
+        return `Words: ${words} | Chars: ${chars}`;
+      };
+      document.getElementById('leftStats').innerText = count(leftEditor);
+      document.getElementById('rightStats').innerText = count(rightEditor);
+    }
+
+    // Auto-save snapshots on input debounce & trigger live auto-translate
+    let snapshotDebounce = null;
+    leftEditor.addEventListener('input', () => {
+      saveToLocalStorage();
+      queueLiveSyncTranslation(false);
+      clearTimeout(snapshotDebounce);
+      snapshotDebounce = setTimeout(() => {
+        createHistorySnapshot(true);
+      }, 1500);
+    });
+
+    rightEditor.addEventListener('input', () => {
+      saveToLocalStorage();
+      clearTimeout(snapshotDebounce);
+      snapshotDebounce = setTimeout(() => {
+        createHistorySnapshot(true);
+      }, 1500);
+    });
+
+    // Keyboard Shortcuts (Ctrl+P, Ctrl+L)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        triggerPrint();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        copyShareableLink();
+      }
+    });
+
+    // --- Initialization on Page Load ---
+    window.addEventListener('DOMContentLoaded', () => {
+      if (workspacePassword) {
+        document.getElementById('lockOverlay').classList.remove('hidden');
+        document.getElementById('lockOverlay').classList.add('flex');
+      }
+
+      const savedLeft = localStorage.getItem('dev_notepad_left');
+      const savedRight = localStorage.getItem('dev_notepad_right');
+      if (savedLeft) leftEditor.innerHTML = savedLeft;
+      if (savedRight) rightEditor.innerHTML = savedRight;
+
+      updateStats();
+      updateHistoryBadge();
+    });
+  </script>
+</body>
+</html>
